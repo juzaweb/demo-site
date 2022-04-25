@@ -3,7 +3,7 @@
 namespace Juzaweb\DemoSite;
 
 use Juzaweb\CMS\Abstracts\Action;
-use Juzaweb\Backend\Facades\HookAction;
+use Juzaweb\CMS\Facades\HookAction;
 
 class DemoSiteAction extends Action
 {
