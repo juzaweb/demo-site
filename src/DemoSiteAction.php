@@ -29,9 +29,11 @@ class DemoSiteAction extends Action
 
     public function setingForm()
     {
-        HookAction::registerConfig([
-            'demo_user'
-        ]);
+        HookAction::registerConfig(
+            [
+                'demo_user'
+            ]
+        );
 
         HookAction::addSettingForm(
             'demo-site',
@@ -52,12 +54,14 @@ class DemoSiteAction extends Action
                 $msg = __('You cannot edit the demo site.');
 
                 if (request()->ajax()) {
-                    response()->json([
-                        'status' => false,
-                        'data' => [
-                            'message' => $msg
-                        ],
-                    ])->send();
+                    response()->json(
+                        [
+                            'status' => false,
+                            'data' => [
+                                'message' => $msg
+                            ],
+                        ]
+                    )->send();
                     die();
                 }
 

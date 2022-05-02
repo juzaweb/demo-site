@@ -2,19 +2,14 @@
     "name": "juzaweb/demo-site",
     "description": "",
     "extra": {
-        "laravel": {
-            "providers": [
-                "Juzaweb\\DemoSite\\Providers\\AutoloadServiceProvider"
-            ]
-        },
         "juzaweb": {
             "providers": [
                 "Juzaweb\\DemoSite\\Providers\\DemoSiteServiceProvider"
             ],
             "name": "juzaweb/demo-site",
             "domain": "demo",
-            "cms_min": "1.0.9",
-            "version": "1.0",
+            "cms_min": "^3.0",
+            "version": "1.0.2",
             "setting_url": "setting/system/demo-site"
         }
     },
