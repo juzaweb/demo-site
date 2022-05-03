@@ -6,10 +6,10 @@
             "providers": [
                 "Juzaweb\\DemoSite\\Providers\\DemoSiteServiceProvider"
             ],
-            "name": "juzaweb/demo-site",
+            "name": "Demo site",
             "domain": "demo",
             "cms_min": "^3.0",
-            "version": "1.0",
+            "version": "1.0.1",
             "setting_url": "setting/system/demo-site"
         }
     },
