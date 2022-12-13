@@ -2,6 +2,8 @@
 
 namespace Juzaweb\DemoSite;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Juzaweb\CMS\Abstracts\Action;
 use Juzaweb\CMS\Facades\HookAction;
 
@@ -21,7 +23,7 @@ class DemoSiteAction extends Action
     
         $this->addAction(
             Action::BACKEND_INIT,
-            [$this, 'disableMenus']
+            [$this, 'blockMenus']
         );
 
         $this->addFilter(
@@ -30,6 +32,8 @@ class DemoSiteAction extends Action
             20,
             2
         );
+        
+        $this->addFilter('get_admin_menu', [$this, 'disableMenus']);
     }
 
     public function setingForm()
@@ -76,7 +80,7 @@ class DemoSiteAction extends Action
         }
     }
 
-    public function applyAdminPermission($value, $user)
+    public function applyAdminPermission($value, $user): bool
     {
         $demoUser = get_config('demo_user');
         if ($demoUser == $user->id) {
@@ -86,15 +90,34 @@ class DemoSiteAction extends Action
         return $value;
     }
     
-    public function disableMenus()
+    public function blockMenus()
     {
         $adminPrefix = config('juzaweb.admin_prefix');
         $disables = collect(config('demo_site.menu_disable', []))
-            ->map(fn ($item) => $adminPrefix ."/". $item)
+            ->map(fn ($item) => "{$adminPrefix}/{$item}")
             ->toArray();
         
         if (request()->is($disables)) {
             abort(403);
         }
+    }
+    
+    public function disableMenus($menus)
+    {
+        $disable = config('demo_site.menu_disable', []);
+        return collect($menus)->filter(
+            fn ($item) => !collect($disable)->contains(fn ($pattern) => Str::is($pattern, $item['url']))
+        )->map(
+            function ($item) use ($disable) {
+                if ($children = Arr::get($item, 'children')) {
+                    $item['children'] = collect($children)->filter(
+                        fn ($item) => !collect($disable)->contains(
+                            fn ($pattern) => Str::is($pattern, $item['url'])
+                        )
+                    )->toArray();
+                }
+                return $item;
+            }
+        )->toArray();
     }
 }
