@@ -12,4 +12,9 @@ class DemoSiteServiceProvider extends ServiceProvider
     {
         ActionRegister::register(DemoSiteAction::class);
     }
+    
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../../config/demo_site.php', 'demo_site');
+    }
 }

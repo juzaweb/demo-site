@@ -18,6 +18,11 @@ class DemoSiteAction extends Action
             Action::BACKEND_CALL_ACTION,
             [$this, 'setingForm']
         );
+    
+        $this->addAction(
+            Action::BACKEND_INIT,
+            [$this, 'disableMenus']
+        );
 
         $this->addFilter(
             Action::BEFORE_PERMISSION_ADMIN,
@@ -79,5 +84,17 @@ class DemoSiteAction extends Action
         }
 
         return $value;
+    }
+    
+    public function disableMenus()
+    {
+        $adminPrefix = config('juzaweb.admin_prefix');
+        $disables = collect(config('demo_site.menu_disable', []))
+            ->map(fn ($item) => $adminPrefix ."/". $item)
+            ->toArray();
+        
+        if (request()->is($disables)) {
+            abort(403);
+        }
     }
 }

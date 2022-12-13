@@ -8,7 +8,7 @@
             ],
             "name": "Demo site",
             "domain": "demo",
-            "cms_min": "^3.0",
+            "cms_min": "3.3",
             "version": "1.0.2",
             "setting_url": "setting/system/demo-site"
         }
