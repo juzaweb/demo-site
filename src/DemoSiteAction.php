@@ -92,32 +92,50 @@ class DemoSiteAction extends Action
     
     public function blockMenus()
     {
-        $adminPrefix = config('juzaweb.admin_prefix');
-        $disables = collect(config('demo_site.menu_disable', []))
-            ->map(fn ($item) => "{$adminPrefix}/{$item}")
-            ->toArray();
-        
-        if (request()->is($disables)) {
-            abort(403);
+        if ($this->isDisable()) {
+            $adminPrefix = config('juzaweb.admin_prefix');
+            $disables = collect(config('demo_site.menu_disable', []))
+                ->map(fn ($item) => "{$adminPrefix}/{$item}")
+                ->toArray();
+    
+            if (request()->is($disables)) {
+                abort(403);
+            }
         }
     }
     
     public function disableMenus($menus)
     {
-        $disable = config('demo_site.menu_disable', []);
-        return collect($menus)->filter(
-            fn ($item) => !collect($disable)->contains(fn ($pattern) => Str::is($pattern, $item['url']))
-        )->map(
-            function ($item) use ($disable) {
-                if ($children = Arr::get($item, 'children')) {
-                    $item['children'] = collect($children)->filter(
-                        fn ($item) => !collect($disable)->contains(
-                            fn ($pattern) => Str::is($pattern, $item['url'])
-                        )
-                    )->toArray();
+        if ($this->isDisable()) {
+            $disable = config('demo_site.menu_disable', []);
+            return collect($menus)->filter(
+                fn ($item) => !collect($disable)->contains(fn ($pattern) => Str::is($pattern, $item['url']))
+            )->map(
+                function ($item) use ($disable) {
+                    if ($children = Arr::get($item, 'children')) {
+                        $item['children'] = collect($children)->filter(
+                            fn ($item) => !collect($disable)->contains(
+                                fn ($pattern) => Str::is($pattern, $item['url'])
+                            )
+                        )->toArray();
+                    }
+                    return $item;
                 }
-                return $item;
-            }
-        )->toArray();
+            )->toArray();
+        }
+        
+        return $menus;
+    }
+    
+    private function isDisable(): bool
+    {
+        global $jw_user;
+        $demoUser = get_config('demo_user');
+    
+        if ($jw_user->id == $demoUser) {
+            return true;
+        }
+        
+        return false;
     }
 }
