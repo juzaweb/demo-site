@@ -1,6 +1,8 @@
 {
     "name": "juzaweb/demo-site",
-    "description": "",
+    "type": "juzaweb-plugin",
+    "license": "MIT",
+    "description": "Create a demo website",
     "extra": {
         "juzaweb": {
             "providers": [
